@@ -1,0 +1,104 @@
+<!-- This is the corresponding "starter code" for 07_Markers/Infowindows in Udacity and Google's Maps
+API Course, Lesson 1 -->
+<html>
+<head>
+    <!-- styles put here, but you can include a CSS file and reference it instead! -->
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Cairo" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">اماكن في الرياض</a>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <br>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="بحث" id="address" data-bind="textInput: search ">
+            <button class="btn buttons-style my-2 my-sm-0" type="submit" id="submit">بحث</button>
+        </form>
+
+    </div>
+</nav>
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <!-- ko foreach: filteredLocationList -->
+            <div class="col-sm-6">
+                <div class="card">
+                    <img class="card-img-top" data-bind="attr: { src: img}" alt="Card image cap">
+                    <div class="card-block">
+                        <h3 class="card-title" data-bind="text: name"></h3>
+                        <p class="card-text">محتوى</p>
+                        <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i>
+                        <i class="fa fa-star-o" aria-hidden="true"></i>
+                        <i class="fa fa-star-o" aria-hidden="true"></i>
+                        <i class="fa fa-star-o" aria-hidden="true"></i>
+                        <a href="#" class="btn buttons-style">التفاصيل</a>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+
+            <!-- /ko -->
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="map"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // Create a map variable
+    var map;
+    // Function to initialize the map within the map div
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 24.713705, lng: 46.676992},
+            zoom: 11
+        });
+        var infowindow = new google.maps.InfoWindow;
+        var marker, i;
+        for (i = 0; i < initialLocs.length; i++) {
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(initialLocs[i].lat, initialLocs[i].lng),
+                map: map
+            });
+            initialLocs[i].marker = marker;
+            console.log(marker);
+            //  an EVENT LISTENER so that the infowindow opens when
+            // the marker is clicked!
+
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infowindow.setContent(initialLocs[i].name);
+                    infowindow.open(map, marker);
+                }
+            })(marker, i));
+        }
+        ko.applyBindings(new ViewModel());
+
+    }
+
+
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyCM1jcL0uKbL9kIeIUbDnrAfr5JxgxaDYs&callback=initMap">
+</script>
+<script src="js/knockout-3.4.2.js"
+        type="text/javascript"></script>
+<script src="js/scripts.js"
+        type="text/javascript"></script>
+</body>
+</html>
